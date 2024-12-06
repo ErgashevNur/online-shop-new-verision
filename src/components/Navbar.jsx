@@ -1,7 +1,55 @@
 import { FaClipboardList } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 
 function Navbar() {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("https://dummyjson.com/products");
+        const data = await response.json();
+        setProducts(
+          data.products.map((product) => ({
+            ...product,
+            originalPrice:
+              product.price * (1 + product.discountPercentage / 100),
+            quantity: 1,
+          }))
+        );
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  const handleRemoveItem = (id) => {
+    setProducts(products.filter((item) => item.id !== id));
+  };
+
+  const handleQuantityChange = (id, increment) => {
+    setProducts((prevItems) =>
+      prevItems.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              quantity: Math.max(1, item.quantity + increment),
+            }
+          : item
+      )
+    );
+  };
+
+  const totalPrice = products.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0
+  );
+
   return (
     <>
       <div className="px-10 bg-base-300 flex justify-between items-center">
@@ -126,7 +174,9 @@ function Navbar() {
                       d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
                     />
                   </svg>
-                  <span className="badge badge-sm indicator-item">0</span>
+                  <span className="badge badge-sm indicator-item">
+                    {products.length}
+                  </span>
                 </div>
               </div>
               <div
@@ -135,7 +185,9 @@ function Navbar() {
               >
                 <div className="card-body">
                   <span className="text-lg font-bold">Your Products</span>
-                  <span className="text-info">Subtotal: $0.00</span>
+                  <span className="text-info">
+                    Subtotal: ${totalPrice.toLocaleString()}
+                  </span>
                   <div className="card-actions">
                     <Link to="/Cart" className="btn btn-primary btn-block">
                       View cart
@@ -153,7 +205,7 @@ function Navbar() {
                 <div className="w-10 rounded-full">
                   <img
                     alt="Tailwind CSS Navbar component"
-                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS20rtMKb7IMQsbejTX6UDFz2PUAz4oAwo0RA&s"
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStrNK3Y580Wc8_bC1QfLwdqecOc2-z94GAQA&s"
                   />
                 </div>
               </div>

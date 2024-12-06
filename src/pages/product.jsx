@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
+import { IoMdCheckmark } from "react-icons/io";
 
 const Loading = () => {
   return (
@@ -74,6 +75,13 @@ const Product = () => {
             </span>
             <span className="text-gray-500 ml-2">({rating})</span>
           </div>
+          <h3 className="text-sm mt-4">
+            {" "}
+            <button className="border rounded bg-green-200 px-2 py-2">
+              <IoMdCheckmark />
+            </button>{" "}
+            There are {stock} for sale
+          </h3>
 
           {/* Price Information */}
           <div className="flex justify-between items-center mt-4">

@@ -32,6 +32,17 @@ const Home = () => {
     return <Loading />;
   }
 
+  // button orqalik local storage qoshamiza
+  const handleAddToCart = (productId) => {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    cart.push(productId);
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    console.log("Mahsulot savatga qo'shildi:", productId);
+  };
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4 mx-8">
       {products.map((product) => {
@@ -73,7 +84,10 @@ const Home = () => {
               </div>
             </Link>
 
-            <button className="mt-4 bg-blue-500 text-white p-2 rounded-full flex items-center justify-center hover:bg-blue-600">
+            <button
+              onClick={() => handleAddToCart(product)}
+              className="mt-4 bg-blue-500 text-white p-2 rounded-full flex items-center justify-center hover:bg-blue-600"
+            >
               <FaShoppingCart className="text-xl" />
             </button>
           </div>

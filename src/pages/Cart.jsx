@@ -1,48 +1,33 @@
 import React, { useState, useEffect } from "react";
-import { FaRegTimesCircle } from "react-icons/fa";
-import Loading from "../components/Loading";
+import { FaTrash, FaMinus, FaPlus } from "react-icons/fa";
+// import Loading from "../components/Loading";
+
+const Loading = () => {
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-gray-600 bg-opacity-50 z-50">
+      <span className="loading loading-ring loading-lg"></span>
+    </div>
+  );
+};
 
 const Cart = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Maxsulotlarni ovommiza
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch("https://dummyjson.com/products");
-        const data = await response.json();
-        setProducts(
-          data.products.map((product) => ({
-            ...product,
-            originalPrice:
-              product.price * (1 + product.discountPercentage / 100),
-            quantity: 1,
-          }))
-        );
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-        setLoading(false);
-      }
-    };
-    fetchProducts();
+    const cartSaved = JSON.parse(localStorage.getItem("cart")) || [];
+    setProducts(cartSaved);
   }, []);
 
-  const handleRemoveItem = (id) => {
-    setProducts(products.filter((item) => item.id !== id));
-  };
+  // kerak emas maxsulotni tashavomizza
+  const removeProd = (id) => {
+    const prod = JSON.parse(localStorage.getItem("cart")) || [];
 
-  const handleQuantityChange = (id, increment) => {
-    setProducts((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              quantity: Math.max(1, item.quantity + increment),
-            }
-          : item
-      )
-    );
+    const check = prod.filter((item) => item.id !== id);
+
+    localStorage.setItem("cart", JSON.stringify(check));
+    setProducts(check);
   };
 
   const totalPrice = products.reduce(
@@ -50,13 +35,11 @@ const Cart = () => {
     0
   );
 
-  const totalOriginalPrice = products.reduce(
-    (acc, item) => acc + item.originalPrice * item.quantity,
-    0
-  );
+  // maxsulotni sani haqida
+  const [amount, setAmount] = useState(1);
 
   if (loading) {
-    Loading;
+    <Loading />;
   }
 
   return (
@@ -65,14 +48,13 @@ const Cart = () => {
         Savatingiz, {products.length} mahsulot
       </h1>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <div className="lg:col-span-3">
-          {products.map((item) => (
+      {products.map((item) => (
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div className="lg:col-span-3">
             <div
               key={item.id}
               className="flex items-center gap-4 p-4 bg-white shadow rounded-lg mb-4"
             >
-              <input type="checkbox" className="checkbox" defaultChecked />
               <img
                 src={item.thumbnail}
                 alt={item.title}
@@ -80,62 +62,65 @@ const Cart = () => {
               />
               <div className="flex-1">
                 <h2 className="font-bold">{item.title}</h2>
-                <p className="text-sm text-gray-500">
-                  Sotuvchi: Noma'lum sotuvchi
-                </p>
+                <p className="text-sm text-gray-500">Sotuvchi: {item.brand}</p>
                 <p className="text-gray-500 line-through text-sm">
-                  $ {item.originalPrice.toLocaleString()}
+                  $ {(item.price * 0.2 + item.price).toFixed(2)}
                 </p>
-                <p className="text-green-600 font-bold">
-                  $ {item.price.toLocaleString()}
-                </p>
+                <p className="text-green-600 font-bold">$ {item.price}</p>
                 <div className="flex items-center gap-2 mt-2">
                   <button
-                    onClick={() => handleQuantityChange(item.id, -1)}
+                    onClick={() => setAmount((prev) => prev - 1)}
                     className="btn btn-outline btn-sm"
                   >
-                    -
+                    <FaMinus />
                   </button>
-                  <span>{item.quantity}</span>
+                  <span id="amounts">{amount}</span>
                   <button
-                    onClick={() => handleQuantityChange(item.id, 1)}
+                    onClick={() => setAmount((prev) => prev + 1)}
                     className="btn btn-outline btn-sm"
                   >
-                    +
+                    <FaPlus />
                   </button>
                 </div>
               </div>
-              <button onClick={() => handleRemoveItem(item.id)} className="btn">
-                <FaRegTimesCircle className="btn-md" />
+              <button onClick={() => removeProd(item.id)} className="btn">
+                <FaTrash className="text-xl" />
               </button>
             </div>
-          ))}
-        </div>
+          </div>
 
-        <div className="bg-white p-4 shadow rounded-lg">
-          <h2 className="font-bold text-lg mb-4">Buyurtmangiz</h2>
-          <div className="mb-2">
-            <span className="text-sm text-gray-500">
-              Mahsulotlar ({products.length}):
-            </span>
-            <span className="float-right text-sm">
-              $ {totalOriginalPrice.toLocaleString()}
-            </span>
+          <div className="bg-white p-4 shadow rounded-lg">
+            <h2 className="font-bold text-lg mb-4">Buyurtmangiz</h2>
+            <div className="mb-2">
+              <span className="text-sm text-gray-500">
+                Mahsulotlar ({products.length}):
+              </span>
+              <span className="float-right text-sm">
+                ${" "}
+                {((item.price * 0.2 + item.price).toFixed(2) * amount).toFixed(
+                  2
+                )}
+              </span>
+            </div>
+            <div className="mb-2">
+              <span className="text-sm text-gray-500">Jami:</span>
+              <span className="float-right text-lg font-bold text-green-600">
+                ${(item.price * amount).toFixed(2)}
+              </span>
+            </div>
+            <p className="text-sm text-gray-500 mb-4">
+              Tejovingiz: $
+              {(
+                (item.price * 0.2 + item.price).toFixed(2) * amount -
+                item.price * amount
+              ).toFixed(2)}
+            </p>
+            <button className="btn btn-primary w-full">
+              Rasmiylashtirishga o'tish
+            </button>
           </div>
-          <div className="mb-2">
-            <span className="text-sm text-gray-500">Jami:</span>
-            <span className="float-right text-lg font-bold text-green-600">
-              ${totalPrice.toLocaleString()}
-            </span>
-          </div>
-          <p className="text-sm text-gray-500 mb-4">
-            Tejovingiz: ${(totalOriginalPrice - totalPrice).toLocaleString()}{" "}
-          </p>
-          <button className="btn btn-primary w-full">
-            Rasmiylashtirishga o'tish
-          </button>
         </div>
-      </div>
+      ))}
     </div>
   );
 };
