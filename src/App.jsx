@@ -7,7 +7,9 @@ import MainLayout from "./Layout/MainLayout";
 
 // pages
 import Home from "./pages/Home";
-import Create from "./pages/Create";
+import Cart from "./pages/Cart";
+import Product from "./pages/product";
+import Info from "./pages/Info";
 
 function App() {
   const routes = createBrowserRouter([
@@ -20,8 +22,16 @@ function App() {
           element: <Home />,
         },
         {
-          path: "/create",
-          element: <Create />,
+          path: "/product/:id",
+          element: <Product />,
+        },
+        {
+          path: "/info",
+          element: <Info />,
+        },
+        {
+          path: "/cart",
+          element: <Cart />,
         },
       ],
     },
