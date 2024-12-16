@@ -20,7 +20,9 @@ import {
   Product,
 } from "./pages";
 
+// Loader
 import { loader as HomeLoader } from "./pages/Home";
+import { loader as SingleProductLoader } from "./pages/SingleProduct";
 
 import ProtectRoutes from "./components/ProtectRoutes";
 
@@ -62,6 +64,7 @@ function App() {
         {
           path: "/singleproduct/:id",
           element: <SingleProduct />,
+          loader: SingleProductLoader,
         },
       ],
     },

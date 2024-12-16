@@ -12,19 +12,6 @@ const Loading = () => {
 };
 
 const Product = () => {
-  const { id } = useParams();
-  const [product, setProduct] = useState(null);
-
-  useEffect(() => {
-    fetch(`https://dummyjson.com/products/${id}`)
-      .then((response) => response.json())
-      .then((data) => setProduct(data));
-  }, [id]);
-
-  if (!product) {
-    return <Loading />;
-  }
-
   const {
     title,
     description,
