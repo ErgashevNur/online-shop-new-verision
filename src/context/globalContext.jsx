@@ -1,4 +1,10 @@
-import { createContext, useEffect, useReducer } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useReducer,
+} from "react";
 // import { formatPrice } from "../utils";
 
 // firebase
@@ -10,6 +16,11 @@ export const GlobalContext = createContext();
 const changeState = (state, action) => {
   const { type, payload } = action;
   switch (type) {
+    case "ADD_PRODUCT":
+      return {
+        ...state,
+        selectedProducts: [...state.selectedProducts, payload],
+      };
     case "LOGIN":
       return { ...state, user: payload };
     case "AUTH_READY":
@@ -26,6 +37,7 @@ export function GlobalContextProvider({ children }) {
   const [state, dispatch] = useReducer(changeState, {
     user: null,
     color: "",
+    selectedProducts: [],
     authReady: false,
   });
 
@@ -39,8 +51,13 @@ export function GlobalContextProvider({ children }) {
   const changeColor = (color) => {
     dispatch({ type: "CHANGE_COLOR", payload: color });
   };
+
+  const [password, setPassword] = useState("");
+
   return (
-    <GlobalContext.Provider value={{ ...state, changeColor, dispatch }}>
+    <GlobalContext.Provider
+      value={{ ...state, changeColor, dispatch, password, setPassword }}
+    >
       {children}
     </GlobalContext.Provider>
   );
