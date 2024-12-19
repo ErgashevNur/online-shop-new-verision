@@ -28,6 +28,10 @@ import ProtectRoutes from "./components/ProtectRoutes";
 
 import { useGlobalContext } from "./hooks/useGlobalContext";
 
+// actions
+import { action as LoginAction } from "./pages/Login";
+import { action as RegisterAction } from "./pages/Register";
+
 function App() {
   const { user, authReady } = useGlobalContext();
   const routes = createBrowserRouter([
@@ -71,10 +75,12 @@ function App() {
     {
       path: "/login",
       element: user ? <Navigate to="/" /> : <Login />,
+      action: LoginAction,
     },
     {
       path: "/register",
       element: user ? <Navigate to="/" /> : <Register />,
+      action: RegisterAction,
     },
   ]);
   return <>{authReady && <RouterProvider router={routes} />}</>;

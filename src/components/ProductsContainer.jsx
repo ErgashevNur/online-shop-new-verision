@@ -68,7 +68,7 @@ function ProductsContainer() {
 
             <button
               onClick={(e) => buyProduct(e, prod)}
-              className="mt-4 bg-blue-500 text-white p-2 rounded-full flex items-center justify-center hover:bg-blue-600"
+              className="mt-4 bg-gray-800 text-white p-2 rounded-full flex items-center justify-center hover:bg-gray-600"
             >
               <FaShoppingCart className="text-xl" />
             </button>

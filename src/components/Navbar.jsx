@@ -1,4 +1,4 @@
-import { FaClipboardList } from "react-icons/fa";
+import { FiShoppingCart } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { GlobalContext } from "../context/globalContext";
@@ -11,7 +11,7 @@ function Navbar() {
   return (
     <header className="bg-base-300" style={{ backgroundColor: color }}>
       <div
-        className="align-elements px-10 bg-base-300 flex justify-between items-center"
+        className="align-elements flex-col px-10 bg-base-300 flex justify-between items-center"
         style={{ backgroundColor: color }}
       >
         <div className="navbar " style={{ backgroundColor: color }}>
@@ -27,10 +27,10 @@ function Navbar() {
 
               <ul
                 tabIndex={0}
-                className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
+                className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow flex items-start justify-start flex-col"
               >
                 <li>
-                  <a>
+                  <Link to="/">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="h-5 w-5"
@@ -46,12 +46,50 @@ function Navbar() {
                       />
                     </svg>
                     Home
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a>
-                    <FaClipboardList /> Cart
-                  </a>
+                  <Link to="/info">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>{" "}
+                    About
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/cart">
+                    <FiShoppingCart className="h-5 w-5 " /> Cart
+                  </Link>
+                </li>
+                <li className="flex justify-center">
+                  <Link to="/product/:id" className="">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                      />
+                    </svg>
+                    <span>Save</span>
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -82,7 +120,7 @@ function Navbar() {
                 <Link
                   to="/info"
                   className="tooltip tooltip-bottom"
-                  data-tip="Info"
+                  data-tip="About"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -107,14 +145,17 @@ function Navbar() {
                   className="tooltip tooltip-bottom "
                   data-tip="Cart"
                 >
-                  <FaClipboardList className="h-5 w-5 " />
+                  <FiShoppingCart className="h-5 w-5 " />
                 </Link>
               </li>
             </ul>
           </div>
 
           <div className="navbar-end ">
-            <Link to="/product/:id" className="btn btn-ghost btn-circle">
+            <Link
+              to="/product/:id"
+              className="xs:hidden sm:flex btn btn-ghost btn-circle"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
